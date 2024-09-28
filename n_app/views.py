@@ -414,10 +414,10 @@ import os
 load_dotenv()
 
 # Get the API key
-api_key = os.getenv('API_KEY')
+API_KEY = os.getenv('API_KEY')
 
 # Use the API key in your project
-genai.configure(api_key=api_key)
+genai.configure(api_key=API_KEY)
 
 
 
