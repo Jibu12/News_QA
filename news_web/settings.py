@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+import dj_database_url
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -24,13 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-eiyjg4#zkfh_7!4e^x3h$9s2*v&d(f#_rc#7=%i5ay+bg&7z8='
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
-# settings.py
-SITE_URL = 'http://localhost:8000'  # Use your actual site URL
+
 # settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -58,6 +58,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'news_web.urls'
@@ -103,6 +104,9 @@ DATABASES = {
     }
 }
 
+DATABASES = {
+    'default': dj_database_url.parse('postgresql://news_data_q5yh_user:wui4uMESHNT8FpEdQqZqxRfHQhV8H6G2@dpg-crs46ktds78s73e0ojj0-a.singapore-postgres.render.com/news_data_q5yh')
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -142,7 +146,7 @@ STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
 
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'qa_app','n_app','static')
 
 ]
 
