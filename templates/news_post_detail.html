@@ -1,0 +1,111 @@
+{% extends 'admin_index.html' %}
+
+
+{% block content %}
+    <div class="post-detail">
+        <h1>{{ post.title }}</h1>
+        <p><small>Published on: {{ post.published_at }}</small></p>
+        {% if post.category_id %}
+            <p>Category: {{ post.category_id.name }}</p>
+        {% endif %}
+        {% if post.subcategory_id %}
+            <p>Subcategory: {{ post.subcategory_id.name }}</p>
+        {% endif %}
+        <div class="post-content">
+            {{ post.content }}
+        </div>
+        {% if post.news_image %}
+            <div class="post-image">
+                <img src="{{ post.news_image.url }}" alt="{{ post.title }}" class="rectangular-image">
+            </div>
+        {% endif %}
+        <p><strong>Views:</strong> {{ post.views_count }} | 
+            <strong>Likes:</strong> <span id="likes-count">{{ post.likes_count }}</span> | 
+            <strong>Comments:</strong> {{ post.comments_count }}</p>
+         
+         {% if user.is_authenticated %}
+             <button id="like-button" data-post-id="{{ post.slug }}" class="{% if user in post.postlike_set.all %}liked{% endif %}">
+                 <i class="fa fa-heart"></i> Like
+             </button>
+         {% else %}
+             <p>Please <a href="{% url 'user_login' %}">login</a> to like this post.</p>
+         {% endif %}
+    </div>
+
+
+
+    <!-- qabot -->
+
+    <div class="card mt-5">
+        <div class="card-body">
+            <h4>Ask a Question About This Article</h4>
+            <form method="POST" action="{% url 'ask_question' post.slug %}">
+                {% csrf_token %}
+                <input type="hidden" name="article_content" value="{{ post.content }}">
+                <div class="form-group">
+                    <label for="question_input">Your Question</label>
+                    <input type="text" class="form-control" id="question_input" name="question_input" placeholder="Ask your question here" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Question</button>
+            </form>
+
+            {% if response_text %}
+            <div class="mt-4">
+                <h4>Here is your answer:</h4>
+                <div class="alert alert-info">{{ response_text }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!-- ------------------------------------------------------------------------------- -->
+
+    <style>
+        .rectangular-image {
+            width: 100%;  /* You can set a fixed width or a percentage */
+            max-width: 600px;  /* This limits the image size */
+            height: auto;  /* Ensures the height is proportional to the width */
+            display: block;
+            margin: 20px auto;  /* Centers the image horizontally */
+            border-radius: 10px;  /* Optional: Adds slightly rounded corners */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);  /* Optional: Adds a shadow for better aesthetics */
+        }
+        
+    </style>
+    <block script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const likeButton = document.getElementById('like-button');
+            
+            if (likeButton) {
+                likeButton.addEventListener('click', function (event) {
+                    event.preventDefault(); // Prevent default button behavior
+        
+                    const postId = this.getAttribute('data-post-id');
+                    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+                    fetch(`/news/${postId}/like/`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRFToken': csrfToken
+                        },
+                        body: JSON.stringify({})
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.error) {
+                            alert(data.error);
+                        } else {
+                            const likesCountElement = document.getElementById('likes-count');
+                            likesCountElement.textContent = data.likes_count;
+                            likeButton.classList.toggle('liked');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            }
+        });
+        </script>
+        
+{% endblock content %}

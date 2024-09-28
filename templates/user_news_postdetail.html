@@ -1,0 +1,182 @@
+{% extends 'user_common.html' %}
+
+
+{% block content %}
+    <div class="post-detail">
+        <h1>{{ post.title }}</h1>
+        {% if post.news_image %}
+            <div class="post-image">
+                <img src="{{ post.news_image.url }}" alt="{{ post.title }}" class="rectangular-image">
+            </div>
+        {% endif %}
+        <p><strong>Views:</strong> {{ post.views_count }} | 
+            <strong>Likes:</strong> <span id="likes-count">{{ post.likes_count }}</span> | 
+            <strong>Comments:</strong> {{ post.comments_count }}</p>
+        <p><small>Published on: {{ post.published_at }}</small></p>
+        {% if request.session.user_id %}
+        <form action="{% url 'userlike_post' post.slug %}" method="POST" id="like-form">
+            {% csrf_token %}
+            <button type="button" id="like-button" class="{% if user in post.postlike_set.all %}liked{% else %}not-liked{% endif %}">
+                <i class="fa {% if user in post.postlike_set.all %}fas fa-heart{% else %}far fa-heart{% endif %}"></i>
+                <span class="like-text">
+                    {% if user in post.postlike_set.all %}
+                        Unlike
+                    {% else %}
+                        Like
+                    {% endif %}
+                </span>
+            </button>
+        </form>
+    {% else %}
+        <p>Please <a href="{% url 'user_login' %}">login</a> to like this post.</p>
+    {% endif %}
+        {% if post.category_id %}
+            <p>Category: {{ post.category_id.name }}</p>
+        {% endif %}
+        {% if post.subcategory_id %}
+            <p>Subcategory: {{ post.subcategory_id.name }}</p>
+        {% endif %}
+        <div class="post-content">
+            {{ post.content }}
+        </div>
+        <!--imageplace-->
+        
+        
+           
+
+        <h2>Comments</h2>
+
+<form action="{% url 'add_comment' post.slug %}" method="POST">
+    {% csrf_token %}
+    <textarea name="content" rows="3" required></textarea>
+    <button type="submit">Add Comment</button>
+</form>
+
+<ul>
+    {% for comment in post.comments.all %}
+        <li>
+            <strong>{{ comment.user.username }}</strong>: {{ comment.content }} <br>
+            <small>{{ comment.created_at|date:"F j, Y, g:i a" }}</small>
+        </li>
+    {% empty %}
+        <li>No comments yet.</li>
+    {% endfor %}
+</ul>
+
+        
+    </div>
+
+
+
+    <!-- qabot -->
+
+    <div class="card mt-5">
+        <div class="card-body">
+            <h4>Ask a Question About This Article</h4>
+            <form method="POST" action="{% url 'uask_question' post.slug %}">
+                {% csrf_token %}
+                <input type="hidden" name="article_content" value="{{ post.content }}">
+                <div class="form-group">
+                    <label for="question_input">Your Question</label>
+                    <input type="text" class="form-control" id="question_input" name="question_input" placeholder="Ask your question here" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Question</button>
+            </form>
+
+            {% if response_text %}
+            <div class="mt-4">
+                <h4>Here is your answer:</h4>
+                <div class="alert alert-info">{{ response_text }}</div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<!--  --------------------------------------------------------------------------- -->
+
+    <style>
+        .rectangular-image {
+            width: 100%;  /* You can set a fixed width or a percentage */
+            max-width: 600px;  /* This limits the image size */
+            height: auto;  /* Ensures the height is proportional to the width */
+            display: block;
+            margin: 20px auto;  /* Centers the image horizontally */
+            border-radius: 10px;  /* Optional: Adds slightly rounded corners */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);  /* Optional: Adds a shadow for better aesthetics */
+        }
+        button {
+            border: none;
+            background: #007bff; /* Change this to a contrasting color */
+            color: white; /* Text color */
+            padding: 10px 15px; /* Add some padding */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer;
+            font-size: 16px; /* Font size */
+            display: flex; /* Flex layout */
+            align-items: center; /* Center items vertically */
+        }
+        
+        button.liked {
+            background: #dc3545; /* Color for liked state */
+        }
+        
+        button.not-liked {
+            background: #007bff; /* Color for not liked state */
+        }
+        
+        button i {
+            margin-right: 5px; /* Space between icon and text */
+        }
+        
+        button.liked i {
+            color: red; /* Red color for a liked heart */
+        }
+        
+        button.not-liked i {
+            color: white; /* White color for not liked heart */
+        }
+        
+        
+    </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+    document.getElementById('like-button').addEventListener('click', function (e) {
+        e.preventDefault(); // Prevent the default form submission
+    
+        const form = document.getElementById('like-form');
+        const url = form.action; // Get the form's action URL
+    
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}',  // Include the CSRF token in the headers
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({})  // No body data is needed for this form
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the likes count on the page
+                document.getElementById('likes-count').innerText = data.likes_count;
+                // Toggle the button text and class between "Like" and "Unlike"
+                if (data.liked) {
+                    document.getElementById('like-button').classList.add('liked');
+                    document.getElementById('like-button').innerHTML = '<i class="fa fa-heart"></i> Unlike';
+                } else {
+                    document.getElementById('like-button').classList.remove('liked');
+                    document.getElementById('like-button').innerHTML = '<i class="fa fa-heart"></i> Like';
+                }
+            } else {
+                alert("Something went wrong!");
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+    
+</script>
+
+{% endblock content %}

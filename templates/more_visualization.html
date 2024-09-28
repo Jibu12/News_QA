@@ -1,0 +1,151 @@
+{% extends 'admin_index.html' %}
+
+{% block content %}
+<div class="container">
+    <h2>Welcome, {{ user.username }}</h2>
+    
+<!-- Total Comments Chart -->
+<div class="card mb-3">
+    <div class="card-header">Total Comments per Post</div>
+    <div class="card-body">
+        <canvas id="totalCommentsChart"></canvas>
+    </div>
+</div>
+
+
+<!-- Views by Post Chart -->
+<div class="card mb-3">
+    <div class="card-header">Views per Post</div>
+    <div class="card-body">
+        <canvas id="viewsByPostChart"></canvas>
+    </div>
+</div>
+
+
+<!-- Most Viewed Categories Chart -->
+<div class="card mb-3">
+    <div class="card-header">Most Viewed Categories</div>
+    <div class="card-body">
+        <canvas id="mostViewedCategoriesChart"></canvas>
+    </div>
+</div>
+
+</div>
+
+<!-- Chart.js Script -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script type="text/javascript">
+    var ctx = document.getElementById('totalCommentsChart').getContext('2d');
+    var totalCommentsChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: [{% for post in total_comments_per_post %}"{{ post.0 }}",{% endfor %}],
+            datasets: [{
+                label: 'Total Comments',
+                data: [{% for post in total_comments_per_post %}{{ post.1 }},{% endfor %}],
+                backgroundColor: 'rgba(153, 102, 255, 0.2)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        stepSize: 1,
+                    }
+                }
+            }
+        }
+    });
+
+
+    var ctx = document.getElementById('viewsByPostChart').getContext('2d');
+    var viewsByPostChart = new Chart(ctx, {
+        type: 'doughnut', // Change to 'pie' if you prefer that
+        data: {
+            labels: [{% for post in post_views %}"{{ post.title }}",{% endfor %}],
+            datasets: [{
+                label: 'Views',
+                data: [{% for post in post_views %}{{ post.total_views }},{% endfor %}],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    // Add more colors as needed
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    // Add more colors as needed
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,  // Allow the height to be set independently
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Top 10 Viewed Posts'
+                }
+            }
+        }
+    });
+
+    var ctx = document.getElementById('mostViewedCategoriesChart').getContext('2d');
+    var mostViewedCategoriesChart = new Chart(ctx, {
+        type: 'pie', // Change to 'doughnut' if you prefer that
+        data: {
+            labels: [{% for category in category_views %}"{{ category.category_id__name }}",{% endfor %}],
+            datasets: [{
+                label: 'Views',
+                data: [{% for category in category_views %}{{ category.total_views }},{% endfor %}],
+                backgroundColor: [
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    // Add more colors as needed
+                ],
+                borderColor: [
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    // Add more colors as needed
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,  // Allow the height to be set independently
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Views Per Category'
+                }
+            }
+        }
+    });
+    
+</script>
+
+{% endblock %}

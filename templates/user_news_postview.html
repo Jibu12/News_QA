@@ -1,0 +1,18 @@
+{% extends 'user_common.html' %}
+
+{% block content %}
+    <h1>News Posts</h1>
+    
+    <div class="news-posts">
+        <ul>
+        {% for post in posts %}
+            <li>
+                <h2><a href="{% url 'userpost_detail' post.slug %}">{{ post.title }}</a></h2>
+                <p>{{ post.excerpt }}</p>
+                <p><small>Published on: {{ post.published_at }}</small></p>
+                <p>Category: {{ post.category_id.name }} | Subcategory: {{ post.subcategory_id.name }}</p>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock content %}

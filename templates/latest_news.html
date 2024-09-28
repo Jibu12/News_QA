@@ -1,0 +1,33 @@
+{% extends 'user_common.html' %}
+
+{% block content %}
+<br><br>
+<center><h1>Latest News</h1></center>
+<br><br>
+<div class="container">
+    <div class="row">
+        {% for post in latest_posts %}
+            <div class="col-md-4 mb-4">  <!-- Each post takes up 4 columns (3 per row) -->
+                <div class="card">
+                    <img src="{{ post.news_image.url }}" class="card-img-top" alt="{{ post.title }}">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <a href="{% url 'userpost_detail' post.slug %}" class="text-decoration-none text-dark">
+                                {{ post.title }}
+                            </a>
+                        </h5>
+                        <p class="card-text">{{ post.created_at|date:"F j, Y" }}</p>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-warning" role="alert">
+                    No news posts available.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}

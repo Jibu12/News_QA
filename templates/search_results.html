@@ -1,0 +1,21 @@
+{% extends 'user_common.html' %}  <!-- Adjust the base template as needed -->
+
+{% block content %}
+    <h1>Search Results for "{{ query }}"</h1>
+    <div class="search-results">
+        {% if results %}
+            <ul>
+            {% for post in results %}
+                <li>
+                    <h2><a href="{% url 'userpost_detail' post.slug %}">{{ post.title }}</a></h2>
+                    <p>{{ post.excerpt }}</p>
+                    <p><small>Published on: {{ post.published_at }}</small></p>
+                    <p>Category: {{ post.category_id.name }} | Subcategory: {{ post.subcategory_id.name }}</p>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>No results found for "{{ query }}".</p>
+        {% endif %}
+    </div>
+{% endblock content %}

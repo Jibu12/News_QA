@@ -1,0 +1,43 @@
+{% extends 'admin_index.html' %}
+
+{% block content %}
+<!-- User Statistics -->
+<div class="card mb-3">
+    <div class="card-header">Total Users</div>
+    <div class="card-body">
+        <h4>{{ total_users }} users have signed up.</h4>
+    </div>
+</div>
+
+<!-- Most Popular Posts -->
+<div class="card mb-3">
+    <div class="card-header">Top 10 Most Popular Posts</div>
+    <div class="card-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Likes</th>
+                    <th>Views</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in most_popular_posts %}
+                <tr>
+                    <td>{{ post.title }}</td>
+                    <td>{{ post.likes_count }}</td>
+                    <td>{{ post.views_count }}</td>
+                    <td>{{ post.comments_count }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4">No posts available.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+{% endblock %}

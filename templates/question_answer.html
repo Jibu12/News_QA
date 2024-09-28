@@ -1,0 +1,31 @@
+<!-- question_answer.html -->
+{% extends 'user_common.html' %}
+
+{% block content %}
+<div class="container mt-5">
+        <h1 class="text-center">Question & Answer System</h1>
+        <div class="card">
+            <div class="card-body">
+                <form method="POST">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="article_content">News Article/Content</label>
+                        <textarea class="form-control" id="article_content" name="article_content" rows="5" placeholder="Paste your news article or content here"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="question_input">Your Question</label>
+                        <input type="text" class="form-control" id="question_input" name="question_input" placeholder="Ask your question here">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Question</button>
+                </form>
+
+                {% if response_text %}
+                <div class="mt-4">
+                    <h4>Answer:</h4>
+                    <div class="alert alert-info">{{ response_text }}</div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

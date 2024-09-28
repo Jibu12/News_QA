@@ -1,0 +1,23 @@
+{% extends 'admin_index.html' %}
+
+{% block content %}
+    <h1>Categories and Subcategories</h1>
+    
+    <div class="categories">
+        <h2>Categories</h2>
+        <ul>
+        {% for category in categories %}
+            <li>
+                {{ category.name }}
+                <ul>
+                    {% for subcategory in subcategories %}
+                        {% if subcategory.category_id == category %}
+                            <li>{{ subcategory.name }}</li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endfor %}
+        </ul>
+    </div>
+{% endblock content %}
