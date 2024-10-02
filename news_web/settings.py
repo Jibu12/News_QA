@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'qa_app',
     'crispy_forms',
     'crispy_bootstrap5',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
