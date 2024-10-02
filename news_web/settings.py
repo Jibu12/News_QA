@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'qa_app',
     'crispy_forms',
     'crispy_bootstrap5',
+    'debug_toolbar',
 ]
 
 MIDDLEWARE = [
@@ -59,6 +60,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'news_web.urls'
@@ -104,9 +106,9 @@ DATABASES = {
     }
 }
 
-DATABASES = {
-    'default': dj_database_url.parse('postgresql://news_data_q5yh_user:wui4uMESHNT8FpEdQqZqxRfHQhV8H6G2@dpg-crs46ktds78s73e0ojj0-a.singapore-postgres.render.com/news_data_q5yh')
-}
+# DATABASES = {
+#     'default': dj_database_url.parse('postgresql://news_data_q5yh_user:wui4uMESHNT8FpEdQqZqxRfHQhV8H6G2@dpg-crs46ktds78s73e0ojj0-a.singapore-postgres.render.com/news_data_q5yh')
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -159,6 +161,7 @@ MEDIA_URL ='/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 
 
+
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
@@ -179,3 +182,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"  # Or 'bootstrap5' for Bootstrap 5
+
+
+
