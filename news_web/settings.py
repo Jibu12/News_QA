@@ -106,9 +106,9 @@ DATABASES = {
     }
 }
 
-# DATABASES = {
-#     'default': dj_database_url.parse('postgresql://news_data_q5yh_user:wui4uMESHNT8FpEdQqZqxRfHQhV8H6G2@dpg-crs46ktds78s73e0ojj0-a.singapore-postgres.render.com/news_data_q5yh')
-# }
+DATABASES = {
+    'default': dj_database_url.parse('postgresql://news_data_q5yh_user:wui4uMESHNT8FpEdQqZqxRfHQhV8H6G2@dpg-crs46ktds78s73e0ojj0-a.singapore-postgres.render.com/news_data_q5yh')
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
